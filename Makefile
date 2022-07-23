@@ -1,17 +1,19 @@
+SRC=src
+
 APPS = 
 
 DRIVERS = 
 
-OBJS = util.o \
+OBJS = $(SRC)/util.o \
 
-TESTS = test/step0.exe \
+TESTS = $(SRC)/test/step0.exe \
 
-CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -iquote .
+CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
 ifeq ($(shell uname),Linux)
   # Linux specific settings
-  BASE = platform/linux
-  CFLAGS := $(CFLAGS) -pthread -iquote $(BASE)
+  BASE = $(SRC)/platform/linux
+  CFLAGS := $(CFLAGS) -pthread -I $(BASE)
 endif
 
 ifeq ($(shell uname),Darwin)
@@ -28,7 +30,7 @@ all: $(APPS) $(TESTS)
 $(APPS): %.exe : %.o $(OBJS) $(DRIVERS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(TESTS): %.exe : %.o $(OBJS) $(DRIVERS) test/test.h
+$(TESTS): %.exe : %.o $(OBJS) $(DRIVERS) $(SRC)/test/test.h
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 .c.o:
