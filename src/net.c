@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "icmp.h"
 #include "ip.h"
 #include "platform.h"
 #include "util.h"
@@ -237,12 +238,16 @@ void net_shutdown(void) {
 }
 
 int net_init(void) {
+  if (intr_init() == -1) {
+    errorf("intr_init() failure");
+    return -1;
+  }
   if (ip_init() == -1) {
     errorf("ip_init() failure");
     return -1;
   }
-  if (intr_init() == -1) {
-    errorf("intr_init() failure");
+  if (icmp_init() == -1) {
+    errorf("icmp_init() failure");
     return -1;
   }
 

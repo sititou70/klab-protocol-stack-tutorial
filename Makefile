@@ -10,6 +10,7 @@ OBJS = \
 	$(SRC)/util.o \
 	$(SRC)/net.o \
 	$(SRC)/ip.o \
+	$(SRC)/icmp.o \
 
 TESTS = \
 	$(SRC)/test/step0.exe \
@@ -21,6 +22,7 @@ TESTS = \
 	$(SRC)/test/step6.exe \
 	$(SRC)/test/step7.exe \
 	$(SRC)/test/step8.exe \
+	$(SRC)/test/step9.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
