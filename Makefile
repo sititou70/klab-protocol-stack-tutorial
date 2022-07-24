@@ -12,6 +12,7 @@ OBJS = \
 TESTS = \
 	$(SRC)/test/step0.exe \
 	$(SRC)/test/step1.exe \
+	$(SRC)/test/step2.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
@@ -19,6 +20,8 @@ ifeq ($(shell uname),Linux)
   # Linux specific settings
   BASE = $(SRC)/platform/linux
   CFLAGS := $(CFLAGS) -pthread -I $(BASE)
+	OBJS := $(OBJS) \
+		$(BASE)/intr.o
 endif
 
 ifeq ($(shell uname),Darwin)
