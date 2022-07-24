@@ -2,11 +2,16 @@ SRC=src
 
 APPS = 
 
-DRIVERS = 
+DRIVERS = \
+	$(SRC)/driver/dummy.o
 
-OBJS = $(SRC)/util.o \
+OBJS = \
+	$(SRC)/util.o \
+	$(SRC)/net.o \
 
-TESTS = $(SRC)/test/step0.exe \
+TESTS = \
+	$(SRC)/test/step0.exe \
+	$(SRC)/test/step1.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
