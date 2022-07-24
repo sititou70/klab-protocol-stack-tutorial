@@ -19,6 +19,7 @@ TESTS = \
 	$(SRC)/test/step4.exe \
 	$(SRC)/test/step5.exe \
 	$(SRC)/test/step6.exe \
+	$(SRC)/test/step7.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
