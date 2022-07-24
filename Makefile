@@ -9,12 +9,14 @@ DRIVERS = \
 OBJS = \
 	$(SRC)/util.o \
 	$(SRC)/net.o \
+	$(SRC)/ip.o \
 
 TESTS = \
 	$(SRC)/test/step0.exe \
 	$(SRC)/test/step1.exe \
 	$(SRC)/test/step2.exe \
 	$(SRC)/test/step3.exe \
+	$(SRC)/test/step4.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
