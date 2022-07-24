@@ -121,6 +121,7 @@ int net_device_output(struct net_device *dev, uint16_t type, const uint8_t *data
   }
   debugf("dev=%s, type=0x%04x, len=%zu", dev->name, type, len);
   debugdump(data, len);
+
   if (dev->ops->transmit(dev, type, data, len, dst) == -1) {
     errorf("device transmit failure, dev=%s, len=%zu", dev->name, len);
     return -1;
