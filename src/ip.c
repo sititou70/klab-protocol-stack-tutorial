@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "arp.h"
 #include "net.h"
 #include "platform.h"
 #include "util.h"
@@ -258,8 +259,10 @@ static int ip_output_device(struct ip_iface *iface, const uint8_t *data, size_t 
     if (dst == iface->broadcast || dst == IP_ADDR_BROADCAST) {
       memcpy(hwaddr, NET_IFACE(iface)->dev->broadcast, NET_IFACE(iface)->dev->alen);
     } else {
-      errorf("arp does not implement");
-      return -1;
+      int ret = arp_resolve(NET_IFACE(iface), dst, hwaddr);
+      if (ret != ARP_RESOLVE_FOUND) {
+        return ret;
+      }
     }
   }
 
