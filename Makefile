@@ -11,6 +11,7 @@ OBJS = \
 	$(SRC)/net.o \
 	$(SRC)/ip.o \
 	$(SRC)/icmp.o \
+	$(SRC)/ether.o \
 
 TESTS = \
 	$(SRC)/test/step0.exe \
@@ -25,15 +26,24 @@ TESTS = \
 	$(SRC)/test/step9.exe \
 	$(SRC)/test/step10.exe \
 	$(SRC)/test/step11.exe \
+	$(SRC)/test/step12.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
 ifeq ($(shell uname),Linux)
   # Linux specific settings
   BASE = $(SRC)/platform/linux
+
   CFLAGS := $(CFLAGS) -pthread -I $(BASE)
-	OBJS := $(OBJS) \
-		$(BASE)/intr.o
+
+	DRIVERS := \
+		$(DRIVERS) \
+		$(BASE)/driver/ether_tap.o \
+
+	OBJS := \
+		$(OBJS) \
+		$(BASE)/intr.o \
+
 endif
 
 ifeq ($(shell uname),Darwin)

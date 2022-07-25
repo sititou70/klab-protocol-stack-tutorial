@@ -11,10 +11,10 @@
 /* Scope of EUI-48 Documentation Values. see https://tools.ietf.org/html/rfc7042 */
 #define ETHER_TAP_HW_ADDR "00:00:5e:00:53:01"
 /* Scope of Documentation Address Blocks (TEST-NET-1). see https://tools.ietf.org/html/rfc5731 */
-#define ETHER_TAP_IP_ADDR "192.0.2.2"
+#define ETHER_TAP_IP_ADDR "192.168.70.2"
 #define ETHER_TAP_NETMASK "255.255.255.0"
 
-#define DEFAULT_GATEWAY "192.0.2.1"
+#define DEFAULT_GATEWAY "192.168.70.2"
 
 const uint8_t test_data[] = {0x45, 0x00, 0x00, 0x30, 0x00, 0x80, 0x00, 0x00, 0xff, 0x01, 0xbd, 0x4a,
                              0x7f, 0x00, 0x00, 0x01, 0x7f, 0x00, 0x00, 0x01, 0x08, 0x00, 0x35, 0x64,
