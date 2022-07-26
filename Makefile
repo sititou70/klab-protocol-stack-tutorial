@@ -31,6 +31,7 @@ TESTS = \
 	$(SRC)/test/step13.exe \
 	$(SRC)/test/step14.exe \
 	$(SRC)/test/step15.exe \
+	$(SRC)/test/step16.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
@@ -39,6 +40,7 @@ ifeq ($(shell uname),Linux)
   BASE = $(SRC)/platform/linux
 
   CFLAGS := $(CFLAGS) -pthread -I $(BASE)
+	LDFLAGS := $(LDFLAGS) -lrt
 
 	DRIVERS := \
 		$(DRIVERS) \
