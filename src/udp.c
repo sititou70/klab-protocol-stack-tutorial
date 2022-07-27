@@ -1,6 +1,7 @@
 
 #include "udp.h"
 
+#include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -41,7 +42,7 @@ struct udp_pcb {
   int state;
   struct ip_endpoint local;
   struct queue_head queue; /* receive queue */
-  int wc;                  /* wait count */
+  struct sched_ctx ctx;
 };
 
 struct udp_queue_entry {
@@ -80,6 +81,7 @@ static struct udp_pcb *udp_pcb_alloc(void) {
   for (pcb = pcbs; pcb < tailof(pcbs); pcb++) {
     if (pcb->state == UDP_PCB_STATE_FREE) {
       pcb->state = UDP_PCB_STATE_OPEN;
+      sched_ctx_init(&pcb->ctx);
       return pcb;
     }
   }
@@ -90,11 +92,11 @@ static struct udp_pcb *udp_pcb_alloc(void) {
 static void udp_pcb_release(struct udp_pcb *pcb) {
   struct queue_entry *entry;
 
-  if (pcb->wc) {
-    pcb->state = UDP_PCB_STATE_CLOSING;
+  pcb->state = UDP_PCB_STATE_CLOSING;
+  if (sched_ctx_destroy(&pcb->ctx) == -1) {
+    sched_wakeup(&pcb->ctx);
     return;
   }
-
   pcb->state = UDP_PCB_STATE_FREE;
   pcb->local.addr = IP_ADDR_ANY;
   pcb->local.port = 0;
@@ -201,6 +203,7 @@ static void udp_input(const uint8_t *data, size_t len, ip_addr_t src, ip_addr_t 
   }
 
   debugf("queue pushed: id=%d, num=%d", udp_pcb_id(pcb), pcb->queue.num);
+  sched_wakeup(&pcb->ctx);
   mutex_unlock(&mutex);
 }
 
@@ -245,9 +248,26 @@ ssize_t udp_output(struct ip_endpoint *src, struct ip_endpoint *dst, const uint8
   return len;
 }
 
+static void event_handler(void *arg) {
+  struct udp_pcb *pcb;
+
+  (void)arg;
+  mutex_lock(&mutex);
+  for (pcb = pcbs; pcb < tailof(pcbs); pcb++) {
+    if (pcb->state == UDP_PCB_STATE_OPEN) {
+      sched_interrupt(&pcb->ctx);
+    }
+  }
+  mutex_unlock(&mutex);
+}
+
 int udp_init(void) {
   if (ip_protocol_register(IP_PROTOCOL_UDP, udp_input) == -1) {
     errorf("ip_protocol_register() failure");
+    return -1;
+  }
+  if (net_event_subscribe(event_handler, NULL) == -1) {
+    errorf("net_event_subscribe() failure");
     return -1;
   }
 
@@ -382,11 +402,14 @@ ssize_t udp_recvfrom(int id, uint8_t *buf, size_t size, struct ip_endpoint *fore
     if (entry) {
       break;
     }
-    pcb->wc++;
-    mutex_unlock(&mutex);
-    sleep(1);
-    mutex_lock(&mutex);
-    pcb->wc--;
+    /* Wait to be woken up by sched_wakeup() or shced_interrupt() */
+    int err = sched_sleep(&pcb->ctx, &mutex, NULL);
+    if (err) {
+      debugf("interrupted");
+      mutex_unlock(&mutex);
+      errno = EINTR;
+      return -1;
+    }
     if (pcb->state == UDP_PCB_STATE_CLOSING) {
       debugf("closed");
       udp_pcb_release(pcb);

@@ -38,6 +38,7 @@ TESTS = \
 	$(SRC)/test/step19.exe \
 	$(SRC)/test/step20-1.exe \
 	$(SRC)/test/step20-2.exe \
+	$(SRC)/test/step21.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
@@ -55,6 +56,7 @@ ifeq ($(shell uname),Linux)
 	OBJS := \
 		$(OBJS) \
 		$(BASE)/intr.o \
+		$(BASE)/sched.o \
 
 endif
 

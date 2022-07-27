@@ -83,6 +83,10 @@ extern int net_timer_handler(void);
 extern int net_input_handler(uint16_t type, const uint8_t *data, size_t len, struct net_device *dev);
 extern int net_softirq_handler(void);
 
+extern int net_event_subscribe(void (*handler)(void *arg), void *arg);
+extern int net_event_handler(void);
+extern void net_raise_event(void);
+
 extern int net_run(void);
 extern void net_shutdown(void);
 extern int net_init(void);
