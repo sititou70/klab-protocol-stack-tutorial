@@ -7,6 +7,7 @@ DRIVERS = \
 	$(SRC)/driver/loopback.o \
 
 OBJS = \
+	$(SRC)/tcp.o \
 	$(SRC)/udp.o \
 	$(SRC)/arp.o \
 	$(SRC)/icmp.o \
@@ -39,6 +40,7 @@ TESTS = \
 	$(SRC)/test/step20-1.exe \
 	$(SRC)/test/step20-2.exe \
 	$(SRC)/test/step21.exe \
+	$(SRC)/test/step22.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
