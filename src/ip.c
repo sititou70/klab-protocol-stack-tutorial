@@ -145,7 +145,6 @@ static struct ip_route *ip_route_add(ip_addr_t network, ip_addr_t netmask, ip_ad
   char addr3[IP_ADDR_STR_LEN];
   char addr4[IP_ADDR_STR_LEN];
 
-  //
   struct ip_route *route;
   route = memory_alloc(sizeof(*route));
   if (!route) {
