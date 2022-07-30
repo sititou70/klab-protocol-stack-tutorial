@@ -1,6 +1,6 @@
 SRC=src
 
-APPS = 
+APPS =
 
 DRIVERS = \
 	$(SRC)/driver/dummy.o \
@@ -46,6 +46,7 @@ TESTS = \
 	$(SRC)/test/step25.exe \
 	$(SRC)/test/step27.exe \
 	$(SRC)/test/step28.exe \
+	$(SRC)/test/simple-http.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
