@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
     tcp_send(soc, buf, ret);
   }
 
+  tcp_close(soc);
   cleanup();
 
   return 0;

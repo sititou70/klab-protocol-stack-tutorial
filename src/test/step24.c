@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
     sleep(1);
   }
 
+  tcp_close(soc);
   cleanup();
 
   return 0;

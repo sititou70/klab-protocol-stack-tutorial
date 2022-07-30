@@ -72,7 +72,10 @@ static int setup(void) {
   return 0;
 }
 
-static void cleanup(void) { net_shutdown(); }
+static void cleanup(void) {
+  sleep(1);
+  net_shutdown();
+}
 
 int main(int argc, char *argv[]) {
   if (setup() == -1) {
