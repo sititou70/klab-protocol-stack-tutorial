@@ -548,6 +548,7 @@ static void tcp_segment_arrives(struct tcp_segment_info *seg, uint8_t flags, uin
           pcb->snd.wl1 = seg->seq;
           pcb->snd.wl2 = seg->ack;
         }
+        sched_wakeup(&pcb->ctx);
       } else if (seg->ack < pcb->snd.una) {
         /* ignore */
       } else if (seg->ack > pcb->snd.nxt) {

@@ -47,6 +47,7 @@ TESTS = \
 	$(SRC)/test/step27.exe \
 	$(SRC)/test/step28.exe \
 	$(SRC)/test/simple-http.exe \
+	$(SRC)/test/static-http-server.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 

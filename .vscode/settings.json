@@ -1,6 +1,9 @@
 {
   "files.associations": {
     "util.h": "c",
-    "ip.h": "c"
+    "ip.h": "c",
+    "test.h": "c",
+    "tcp.h": "c",
+    "net.h": "c"
   }
 }
