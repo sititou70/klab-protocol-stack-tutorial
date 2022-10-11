@@ -1,30 +1,16 @@
-#include <errno.h>
-#include <signal.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 #include "driver/ether_tap.h"
-#include "icmp.h"
 #include "ip.h"
 #include "net.h"
 #include "tcp.h"
 #include "test.h"
 #include "util.h"
 
-static volatile sig_atomic_t terminate;
-
-static void on_signal(int s) {
-  (void)s;
-  terminate = 1;
-  net_raise_event();
-}
-
-static int setup(void) {
-  signal(SIGINT, on_signal);
+int main(int argc, char *argv[]) {
+  /*
+   * setup
+   */
 
   if (net_init() == -1) {
     errorf("net_init() failure");
@@ -46,58 +32,41 @@ static int setup(void) {
     errorf("ip_iface_register() failure");
     return -1;
   }
-  if (ip_route_set_default_gateway(iface, DEFAULT_GATEWAY) == -1) {
-    errorf("ip_route_set_default_gateway() failure");
-    return -1;
-  }
 
   if (net_run() == -1) {
     errorf("net_run() failure");
     return -1;
   }
 
-  return 0;
-}
-
-static void cleanup(void) {
-  sleep(1);
-  net_shutdown();
-}
-
-int main(int argc, char *argv[]) {
-  if (setup() == -1) {
-    errorf("setup() failure");
-    return -1;
-  }
-
-  char *response =
-      "HTTP/1.1 200 OK\r\n"
-      "Content-Length: 64\r\n"
-      "\r\n"
-      "<html><head><title>hello</title></head><body>world</body></html>";
+  /*
+   * main
+   */
 
   struct ip_endpoint local;
   ip_endpoint_pton("192.168.70.2:80", &local);
-  uint8_t buf[2048];
-  while (!terminate) {
-    int soc = tcp_open_rfc793(&local, NULL, 0);
-    if (soc == -1) {
-      errorf("tcp_open_rfc793() failure");
-      return -1;
-    }
-
-    while (!terminate) {
-      ssize_t ret = tcp_receive(soc, buf, sizeof(buf));
-      hexdump(stderr, buf, ret);
-      if (ret == 0) break;
-
-      tcp_send(soc, (uint8_t *)response, strlen(response));
-    }
-
-    tcp_close(soc);
+  int soc = tcp_open_rfc793(&local, NULL, 0);
+  if (soc == -1) {
+    errorf("tcp_open_rfc793() failure");
+    return -1;
   }
 
-  cleanup();
+  uint8_t buf[2048];
+  tcp_receive(soc, buf, sizeof(buf));
+
+  char *response =
+      "HTTP/1.1 200 OK\r\n"
+      "\r\n"
+      "<html><head><title>hello</title></head><body>world</body></html>";
+  tcp_send(soc, (uint8_t *)response, strlen(response));
+
+  tcp_close(soc);
+
+  /*
+   * cleanup
+   */
+
+  sleep(1);
+  net_shutdown();
 
   return 0;
 }
