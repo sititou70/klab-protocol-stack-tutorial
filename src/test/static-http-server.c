@@ -31,8 +31,8 @@
  */
 
 size_t uri_decode(const char *src, const size_t srclen, char *dst) {
-  int src_i = 0;
-  int dst_i = 0;
+  size_t src_i = 0;
+  size_t dst_i = 0;
 
   while (src_i < srclen) {
     if (src[src_i] == '%' && src_i + 2 < srclen) {
@@ -75,7 +75,7 @@ static char *response_500 =
 
 void http_handler(int soc, uint8_t *reqbuf, size_t reqsize) {
   // assert start of request
-  if (strncmp(reqbuf, "GET ", 4) != 0) {
+  if (strncmp((char *)reqbuf, "GET ", 4) != 0) {
     debugf("error");
     return;
   }
