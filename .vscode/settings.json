@@ -4,6 +4,7 @@
     "ip.h": "c",
     "test.h": "c",
     "tcp.h": "c",
-    "net.h": "c"
+    "net.h": "c",
+    "sha.h": "c"
   }
 }

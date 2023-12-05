@@ -48,6 +48,7 @@ TESTS = \
 	$(SRC)/test/step28.exe \
 	$(SRC)/test/simple-http.exe \
 	$(SRC)/test/static-http-server.exe \
+	$(SRC)/test/ws-echo.exe \
 
 CFLAGS := $(CFLAGS) -g -W -Wall -Wno-unused-parameter -I $(SRC)
 
@@ -56,7 +57,7 @@ ifeq ($(shell uname),Linux)
   BASE = $(SRC)/platform/linux
 
   CFLAGS := $(CFLAGS) -pthread -I $(BASE)
-	LDFLAGS := $(LDFLAGS) -lrt
+	LDFLAGS := $(LDFLAGS) -lrt -lb64 -lssl -lcrypto
 
 	DRIVERS := \
 		$(DRIVERS) \

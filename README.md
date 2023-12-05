@@ -8,6 +8,8 @@ https://twitter.com/pandax381/status/1384491632540753921
 
 - Ubuntu 22.04.1 LTS
 - build-essential
+- libssl-dev
+- libb64-dev
 
 ## サンプルの実行方法
 
